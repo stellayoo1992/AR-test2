@@ -1,87 +1,67 @@
 <!DOCTYPE html>
 <!--
-  This page uses the A‑Frame framework together with AR.js to display
-  the provided GLB model in an augmented‑reality experience. When
-  loaded on a mobile device with a camera, the viewer will see the
-  model appear on top of a printed marker (e.g., the built‑in Hiro
-  marker). The model file "model.glb" must reside in the same
-  directory as this HTML file.
+  This page displays a 3D model and provides an AR experience using
+  Google’s <model-viewer> web component. When viewed on a mobile device
+  with AR support (Android via WebXR/Scene Viewer or iOS via AR Quick
+  Look), the “AR” button will appear allowing the user to project the
+  model into their environment. The GLB file is stored alongside
+  this page as “model.glb”.
 -->
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AR.js A‑Frame Model Viewer</title>
-    <!-- A‑Frame library for 3D scene composition -->
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <!-- AR.js integration for A‑Frame (version 3.x) -->
-    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.3.2/aframe/build/aframe-ar.js"></script>
+    <title>AR Model Viewer</title>
+    <!-- Load the model-viewer component. This script is loaded from a CDN. -->
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
     <style>
+      html,
       body {
         margin: 0;
-        overflow: hidden;
-      }
-      /* Center a message when the camera feed is loading */
-      #loading {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-family: sans-serif;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 1em 2em;
-        border-radius: 4px;
-        display: none;
-      }
-      a-scene[arjs]::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
+        padding: 0;
         width: 100%;
         height: 100%;
-        background: black;
+        overflow: hidden;
+        background-color: #000;
+      }
+      model-viewer {
+        width: 100vw;
+        height: 100vh;
+        background-color: #000;
+      }
+      /* Style the AR button to make it more visible. */
+      model-viewer::part(default-ar-button) {
+        background-color: #0b5ed7;
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <div id="loading">Loading camera…</div>
     <!--
-      a-scene with arjs attribute: AR.js will capture the webcam and
-      detect markers. The "sourceType: webcam" uses the device camera.
+      The model-viewer element displays the 3D model. The "ar" attribute
+      enables augmented reality when supported. The "camera-controls"
+      attribute allows users to orbit and zoom the model. The
+      "auto-rotate" attribute makes the model slowly spin when not
+      interacting.
     -->
-    <a-scene
-      embedded
-      vr-mode-ui="enabled: false"
-      renderer="logarithmicDepthBuffer: true"
-      arjs="sourceType: webcam; debugUIEnabled: false;">
-      <!-- Define the marker to track. The preset="hiro" uses the standard Hiro marker. -->
-      <a-marker preset="hiro">
-        <!-- Load the GLB model. Adjust the scale and position to fit on the marker. -->
-        <a-entity
-          gltf-model="url(model.glb)"
-          rotation="90 0 0"
-          scale="0.5 0.5 0.5"
-          position="0 0 0"
-        ></a-entity>
-      </a-marker>
-      <!-- Add a simple light to illuminate the model -->
-      <a-entity light="type: ambient; color: #ffffff; intensity: 0.8"></a-entity>
-      <a-entity
-        light="type: directional; color: #ffffff; intensity: 0.5"
-        position="0 1 0"
-      ></a-entity>
-      <!-- The camera for AR.js (will be controlled by the library) -->
-      <a-entity camera></a-entity>
-    </a-scene>
-    <script>
-      // Display the loading indicator until the camera stream becomes available.
-      const loadingEl = document.getElementById('loading');
-      loadingEl.style.display = 'block';
-      window.addEventListener('camera-init', () => {
-        loadingEl.style.display = 'none';
-      });
-    </script>
+    <model-viewer
+      id="ar-model"
+      src="model.glb"
+      alt="3D model"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      camera-controls
+      auto-rotate
+      autoplay
+      touch-action="pan-y"
+    ></model-viewer>
   </body>
 </html>
