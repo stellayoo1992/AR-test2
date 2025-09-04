@@ -1,0 +1,69 @@
+<!--
+  This HTML page loads a 3D model and allows users to view it in 3D and
+  Augmented Reality (AR) using the <model-viewer> web component. The
+  page imports the model-viewer library from an external CDN and
+  references the GLB file that was provided by the user. On
+  AR‑enabled devices (for example, Android phones with ARCore), an
+  AR button will appear. When the user taps that button, the model
+  appears in their real environment via WebXR or the Scene Viewer app
+  depending on the device and browser.【107675906576534†L506-L552】
+
+  Note: To enable AR on iOS devices, the model must also be provided
+  as a USDZ file. Since only a GLB file is available, AR is
+  supported on Android devices. If you convert the model to USDZ,
+  you can add an `ios-src` attribute pointing to that file.
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 모델 AR 뷰어</title>
+  <!-- Import the model-viewer JavaScript library from Google's CDN -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f7f7f7;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    model-viewer {
+      width: 100%;
+      max-width: 600px;
+      height: 500px;
+    }
+  </style>
+</head>
+<body>
+  <h1>3D 모델 AR 보기</h1>
+  <!--
+    The model-viewer tag below loads the GLB file and enables AR when
+    the `ar` attribute is present. On supported devices, an AR button
+    will appear automatically. The `camera-controls` attribute lets
+    users rotate and zoom the model on the web page, and `auto-rotate`
+    slowly spins the model for a better initial presentation. The
+    `ar-modes` attribute specifies the AR runtimes that may be used:
+    'webxr' for WebXR-enabled browsers, 'scene-viewer' for the
+    Google Scene Viewer app on Android, and 'quick-look' for Apple's
+    Quick Look (requires a USDZ file).【107675906576534†L543-L552】
+  -->
+  <model-viewer
+    src="model.glb"
+    alt="사용자 제공 3D 모델"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    auto-rotate
+    camera-controls>
+  </model-viewer>
+  <p>모바일 기기에서 AR 버튼을 눌러 실제 공간에 모델을 배치해 보세요.</p>
+</body>
+</html>
